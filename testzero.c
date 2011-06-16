@@ -1,4 +1,5 @@
-#include "uint32.h"
+#include <unistd.h>
+#include "ref.h"
 #include "scan.h"
 #include "strerr.h"
 #include "cdb_make.h"
@@ -26,7 +27,7 @@ main(int argc,char **argv)
   if (cdb_make_start(&c,1) == -1) die_write();
 
   while (loop) {
-    uint32_pack(key,--loop);
+    ref_pack(key,--loop);
     if (cdb_make_add(&c,key,4,data,sizeof data) == -1) die_write();
   }
 

@@ -1,11 +1,10 @@
+#include <unistd.h>
 #include "buffer.h"
-#include "readwrite.h"
-#include "exit.h"
 
 char buf1[256];
 buffer ss1 = BUFFER_INIT(write,1,buf1,sizeof(buf1));
 
-void puts(s)
+void cdb_puts(s)
 char *s;
 {
   if (buffer_puts(&ss1,s) == -1) _exit(111);
@@ -25,20 +24,20 @@ char **argv;
   value = argv[2];
   if (!value) _exit(100);
 
-  puts("char ");
-  puts(name);
-  puts("[] = \"\\\n");
+  cdb_puts("char ");
+  cdb_puts(name);
+  cdb_puts("[] = \"\\\n");
 
   while (ch = *value++) {
-    puts("\\");
+    cdb_puts("\\");
     octal[3] = 0;
     octal[2] = '0' + (ch & 7); ch >>= 3;
     octal[1] = '0' + (ch & 7); ch >>= 3;
     octal[0] = '0' + (ch & 7);
-    puts(octal);
+    cdb_puts(octal);
   }
 
-  puts("\\\n\";\n");
+  cdb_puts("\\\n\";\n");
   if (buffer_flush(&ss1) == -1) _exit(111);
   _exit(0);
 }

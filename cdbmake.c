@@ -1,3 +1,4 @@
+#include <unistd.h>
 #include "error.h"
 #include "open.h"
 #include "strerr.h"
@@ -38,10 +39,10 @@ static struct cdb_make c;
 
 main(int argc,char **argv)
 {
-  unsigned int klen;
-  unsigned int dlen;
-  unsigned int i;
-  uint32 h;
+  off_t klen;
+  off_t dlen;
+  off_t i;
+  ref_t h;
   int fd;
   char ch;
 

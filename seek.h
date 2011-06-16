@@ -1,7 +1,7 @@
 #ifndef SEEK_H
 #define SEEK_H
 
-typedef unsigned long seek_pos;
+typedef off_t seek_pos;
 
 extern seek_pos seek_cur(int);
 

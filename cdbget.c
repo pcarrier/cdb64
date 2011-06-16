@@ -1,4 +1,4 @@
-#include "exit.h"
+#include <unistd.h>
 #include "scan.h"
 #include "str.h"
 #include "buffer.h"
@@ -21,14 +21,14 @@ void die_usage(void)
 }
 
 static struct cdb c;
-char buf[1024];
+char buf[512];
 
 main(int argc,char **argv)
 {
   char *key;
   int r;
-  uint32 pos;
-  uint32 len;
+  ref_t pos;
+  ref_t len;
   unsigned long u = 0;
 
   if (!*argv) die_usage();

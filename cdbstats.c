@@ -1,4 +1,5 @@
-#include "uint32.h"
+#include <unistd.h>
+#include "ref.h"
 #include "fmt.h"
 #include "buffer.h"
 #include "strerr.h"
@@ -19,7 +20,7 @@ void die_write(void)
 {
   strerr_die2sys(111,FATAL,"unable to write output: ");
 }
-void put(char *buf,unsigned int len)
+void put(char *buf,off_t len)
 {
   if (buffer_put(buffer_1small,buf,len) == -1) die_write();
 }
@@ -28,9 +29,9 @@ void putflush(void)
   if (buffer_flush(buffer_1small) == -1) die_write();
 }
 
-uint32 pos = 0;
+ref_t pos = 0;
 
-void get(char *buf,unsigned int len)
+void get(char *buf,off_t len)
 {
   int r;
   while (len > 0) {
@@ -43,20 +44,20 @@ void get(char *buf,unsigned int len)
   }
 }
 
-void getnum(uint32 *num)
+void getnum(ref_t *num)
 {
-  char buf[4];
-  get(buf,4);
-  uint32_unpack(buf,num);
+  char buf[ref_size];
+  get(buf,ref_size);
+  ref_unpack(buf,num);
 }
 
 char strnum[FMT_ULONG];
 
-void putnum(char *label,unsigned long count)
+void putnum(char *label,off_t count)
 {
-  unsigned int i;
+  off_t i;
   put(label,str_len(label));
-  for (i = fmt_ulong(0,count);i < 10;++i) put(" ",1);
+  for (i = fmt_ulong(0,count);i < 20;++i) put(" ",1);
   put(strnum,fmt_ulong(strnum,count));
   put("\n",1);
 }
@@ -70,16 +71,16 @@ static unsigned long numd[11];
 
 main()
 {
-  uint32 eod;
-  uint32 klen;
-  uint32 dlen;
+  ref_t eod;
+  ref_t klen;
+  ref_t dlen;
   seek_pos rest;
   int r;
 
   cdb_init(&c,0);
 
   getnum(&eod);
-  while (pos < 2048) getnum(&dlen);
+  while (pos < 256*entry_size) getnum(&dlen);
 
   while (pos < eod) {
     getnum(&klen);

@@ -1,5 +1,5 @@
+#include <unistd.h>
 #include "buffer.h"
-#include "exit.h"
 #include "strerr.h"
 
 void strerr_warn(char *x1,char *x2,char *x3,char *x4,char *x5,char *x6,struct strerr *se)

@@ -1,7 +1,7 @@
-#include "readwrite.h"
+#include <unistd.h>
 #include "buffer.h"
 
-int buffer_0_read(fd,buf,len) int fd; char *buf; int len;
+ssize_t buffer_0_read(fd,buf,len) int fd; char *buf; int len;
 {
   if (buffer_flush(buffer_1) == -1) return -1;
   return read(fd,buf,len);

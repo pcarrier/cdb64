@@ -1,8 +1,9 @@
+#include <sys/types.h>
 #include "byte.h"
 
 void byte_copy(to,n,from)
 register char *to;
-register unsigned int n;
+register off_t n;
 register char *from;
 {
   for (;;) {

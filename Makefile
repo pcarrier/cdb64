@@ -17,7 +17,7 @@ load auto-str.o buffer.a unix.a byte.a
 	./load auto-str buffer.a unix.a byte.a 
 
 auto-str.o: \
-compile auto-str.c buffer.h readwrite.h exit.h
+compile auto-str.c buffer.h
 	./compile auto-str.c
 
 auto_home.c: \
@@ -40,19 +40,19 @@ compile buffer.c buffer.h
 	./compile buffer.c
 
 buffer_0.o: \
-compile buffer_0.c readwrite.h buffer.h
+compile buffer_0.c buffer.h
 	./compile buffer_0.c
 
 buffer_1.o: \
-compile buffer_1.c readwrite.h buffer.h
+compile buffer_1.c buffer.h
 	./compile buffer_1.c
 
 buffer_1s.o: \
-compile buffer_1s.c readwrite.h buffer.h
+compile buffer_1s.c buffer.h
 	./compile buffer_1s.c
 
 buffer_2.o: \
-compile buffer_2.c readwrite.h buffer.h
+compile buffer_2.c buffer.h
 	./compile buffer_2.c
 
 buffer_copy.o: \
@@ -68,10 +68,10 @@ compile buffer_put.c buffer.h str.h byte.h error.h
 	./compile buffer_put.c
 
 byte.a: \
-makelib byte_copy.o byte_cr.o str_len.o fmt_ulong.o uint32_unpack.o \
-byte_diff.o uint32_pack.o scan_ulong.o
+makelib byte_copy.o byte_cr.o str_len.o fmt_ulong.o ref_unpack.o \
+byte_diff.o ref_pack.o scan_ulong.o
 	./makelib byte.a byte_copy.o byte_cr.o str_len.o \
-	fmt_ulong.o uint32_unpack.o byte_diff.o uint32_pack.o \
+	fmt_ulong.o ref_unpack.o byte_diff.o ref_pack.o \
 	scan_ulong.o
 
 byte_copy.o: \
@@ -91,16 +91,16 @@ makelib cdb.o cdb_hash.o cdb_make.o
 	./makelib cdb.a cdb.o cdb_hash.o cdb_make.o
 
 cdb.o: \
-compile cdb.c readwrite.h error.h seek.h byte.h cdb.h uint32.h
+compile cdb.c error.h seek.h byte.h cdb.h ref.h
 	./compile cdb.c
 
 cdb_hash.o: \
-compile cdb_hash.c cdb.h uint32.h
+compile cdb_hash.c cdb.h ref.h
 	./compile cdb_hash.c
 
 cdb_make.o: \
-compile cdb_make.c readwrite.h seek.h error.h alloc.h cdb.h uint32.h \
-cdb_make.h buffer.h uint32.h
+compile cdb_make.c seek.h error.h alloc.h cdb.h ref.h \
+cdb_make.h buffer.h ref.h
 	./compile cdb_make.c
 
 cdbdump: \
@@ -108,7 +108,7 @@ load cdbdump.o buffer.a unix.a byte.a
 	./load cdbdump buffer.a unix.a byte.a 
 
 cdbdump.o: \
-compile cdbdump.c uint32.h fmt.h buffer.h strerr.h
+compile cdbdump.c ref.h fmt.h buffer.h strerr.h
 	./compile cdbdump.c
 
 cdbget: \
@@ -116,7 +116,7 @@ load cdbget.o cdb.a buffer.a unix.a byte.a
 	./load cdbget cdb.a buffer.a unix.a byte.a 
 
 cdbget.o: \
-compile cdbget.c exit.h scan.h str.h buffer.h strerr.h cdb.h uint32.h
+compile cdbget.c scan.h str.h buffer.h strerr.h cdb.h ref.h
 	./compile cdbget.c
 
 cdbmake: \
@@ -139,7 +139,7 @@ warn-auto.sh cdbmake-sv.sh conf-home
 
 cdbmake.o: \
 compile cdbmake.c error.h open.h strerr.h cdb_make.h buffer.h \
-uint32.h cdb.h uint32.h
+ref.h cdb.h ref.h
 	./compile cdbmake.c
 
 cdbstats: \
@@ -147,8 +147,8 @@ load cdbstats.o cdb.a buffer.a unix.a byte.a
 	./load cdbstats cdb.a buffer.a unix.a byte.a 
 
 cdbstats.o: \
-compile cdbstats.c uint32.h fmt.h buffer.h strerr.h seek.h cdb.h \
-uint32.h
+compile cdbstats.c ref.h fmt.h buffer.h strerr.h seek.h cdb.h \
+ref.h
 	./compile cdbstats.c
 
 cdbtest: \
@@ -156,8 +156,8 @@ load cdbtest.o cdb.a buffer.a unix.a byte.a
 	./load cdbtest cdb.a buffer.a unix.a byte.a 
 
 cdbtest.o: \
-compile cdbtest.c uint32.h fmt.h buffer.h strerr.h seek.h cdb.h \
-uint32.h
+compile cdbtest.c ref.h fmt.h buffer.h strerr.h seek.h cdb.h \
+ref.h
 	./compile cdbtest.c
 
 check: \
@@ -192,7 +192,7 @@ load install.o hier.o auto_home.o buffer.a unix.a byte.a
 	./load install hier.o auto_home.o buffer.a unix.a byte.a 
 
 install.o: \
-compile install.c buffer.h strerr.h error.h open.h readwrite.h exit.h
+compile install.c buffer.h strerr.h error.h open.h
 	./compile install.c
 
 instcheck: \
@@ -200,7 +200,7 @@ load instcheck.o hier.o auto_home.o buffer.a unix.a byte.a
 	./load instcheck hier.o auto_home.o buffer.a unix.a byte.a 
 
 instcheck.o: \
-compile instcheck.c strerr.h error.h readwrite.h exit.h
+compile instcheck.c strerr.h error.h
 	./compile instcheck.c
 
 it: \
@@ -274,7 +274,7 @@ compile str_len.c str.h
 	./compile str_len.c
 
 strerr_die.o: \
-compile strerr_die.c buffer.h exit.h strerr.h
+compile strerr_die.c buffer.h strerr.h
 	./compile strerr_die.c
 
 strerr_sys.o: \
@@ -294,24 +294,17 @@ load testzero.o cdb.a alloc.a buffer.a unix.a byte.a
 	./load testzero cdb.a alloc.a buffer.a unix.a byte.a 
 
 testzero.o: \
-compile testzero.c uint32.h scan.h strerr.h cdb_make.h buffer.h \
-uint32.h
+compile testzero.c ref.h scan.h strerr.h cdb_make.h buffer.h \
+ref.h
 	./compile testzero.c
 
-uint32.h: \
-tryulong32.c compile load uint32.h1 uint32.h2
-	( ( ./compile tryulong32.c && ./load tryulong32 && \
-	./tryulong32 ) >/dev/null 2>&1 \
-	&& cat uint32.h2 || cat uint32.h1 ) > uint32.h
-	rm -f tryulong32.o tryulong32
+ref_pack.o: \
+compile ref_pack.c ref.h
+	./compile ref_pack.c
 
-uint32_pack.o: \
-compile uint32_pack.c uint32.h
-	./compile uint32_pack.c
-
-uint32_unpack.o: \
-compile uint32_unpack.c uint32.h
-	./compile uint32_unpack.c
+ref_unpack.o: \
+compile ref_unpack.c ref.h
+	./compile ref_unpack.c
 
 unix.a: \
 makelib error.o open_read.o open_trunc.o error_str.o seek_set.o \

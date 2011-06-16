@@ -1,6 +1,6 @@
 /* Public domain. */
-
-#include "readwrite.h"
+#include <sys/types.h>
+#include <unistd.h>
 #include "seek.h"
 #include "error.h"
 #include "alloc.h"
@@ -19,15 +19,15 @@ int cdb_make_start(struct cdb_make *c,int fd)
   return seek_set(fd,c->pos);
 }
 
-static int posplus(struct cdb_make *c,uint32 len)
+static int posplus(struct cdb_make *c,ref_t len)
 {
-  uint32 newpos = c->pos + len;
+  ref_t newpos = c->pos + len;
   if (newpos < len) { errno = error_nomem; return -1; }
   c->pos = newpos;
   return 0;
 }
 
-int cdb_make_addend(struct cdb_make *c,unsigned int keylen,unsigned int datalen,uint32 h)
+int cdb_make_addend(struct cdb_make *c,off_t keylen,off_t datalen,ref_t h)
 {
   struct cdb_hplist *head;
 
@@ -43,26 +43,23 @@ int cdb_make_addend(struct cdb_make *c,unsigned int keylen,unsigned int datalen,
   head->hp[head->num].p = c->pos;
   ++head->num;
   ++c->numentries;
-  if (posplus(c,8) == -1) return -1;
+  if (posplus(c,entry_size) == -1) return -1;
   if (posplus(c,keylen) == -1) return -1;
   if (posplus(c,datalen) == -1) return -1;
   return 0;
 }
 
-int cdb_make_addbegin(struct cdb_make *c,unsigned int keylen,unsigned int datalen)
+int cdb_make_addbegin(struct cdb_make *c,off_t keylen,off_t datalen)
 {
-  char buf[8];
+  char buf[entry_size];
 
-  if (keylen > 0xffffffff) { errno = error_nomem; return -1; }
-  if (datalen > 0xffffffff) { errno = error_nomem; return -1; }
-
-  uint32_pack(buf,keylen);
-  uint32_pack(buf + 4,datalen);
-  if (buffer_putalign(&c->b,buf,8) == -1) return -1;
+  ref_pack(buf,keylen);
+  ref_pack(buf + ref_size,datalen);
+  if (buffer_putalign(&c->b,buf,entry_size) == -1) return -1;
   return 0;
 }
 
-int cdb_make_add(struct cdb_make *c,char *key,unsigned int keylen,char *data,unsigned int datalen)
+int cdb_make_add(struct cdb_make *c,char *key,off_t keylen,char *data,off_t datalen)
 {
   if (cdb_make_addbegin(c,keylen,datalen) == -1) return -1;
   if (buffer_putalign(&c->b,key,keylen) == -1) return -1;
@@ -72,13 +69,13 @@ int cdb_make_add(struct cdb_make *c,char *key,unsigned int keylen,char *data,uns
 
 int cdb_make_finish(struct cdb_make *c)
 {
-  char buf[8];
+  char buf[entry_size];
   int i;
-  uint32 len;
-  uint32 u;
-  uint32 memsize;
-  uint32 count;
-  uint32 where;
+  ref_t len;
+  ref_t u;
+  ref_t memsize;
+  ref_t count;
+  ref_t where;
   struct cdb_hplist *x;
   struct cdb_hp *hp;
 
@@ -99,7 +96,7 @@ int cdb_make_finish(struct cdb_make *c)
   }
 
   memsize += c->numentries; /* no overflow possible up to now */
-  u = (uint32) 0 - (uint32) 1;
+  u = (ref_t) 0 - (ref_t) 1;
   u /= sizeof(struct cdb_hp);
   if (memsize > u) { errno = error_nomem; return -1; }
 
@@ -124,8 +121,8 @@ int cdb_make_finish(struct cdb_make *c)
     count = c->count[i];
 
     len = count + count; /* no overflow possible */
-    uint32_pack(c->final + 8 * i,c->pos);
-    uint32_pack(c->final + 8 * i + 4,len);
+    ref_pack(c->final + entry_size * i,c->pos);
+    ref_pack(c->final + entry_size * i + ref_size,len);
 
     for (u = 0;u < len;++u)
       c->hash[u].h = c->hash[u].p = 0;
@@ -140,10 +137,10 @@ int cdb_make_finish(struct cdb_make *c)
     }
 
     for (u = 0;u < len;++u) {
-      uint32_pack(buf,c->hash[u].h);
-      uint32_pack(buf + 4,c->hash[u].p);
-      if (buffer_putalign(&c->b,buf,8) == -1) return -1;
-      if (posplus(c,8) == -1) return -1;
+      ref_pack(buf,c->hash[u].h);
+      ref_pack(buf + ref_size,c->hash[u].p);
+      if (buffer_putalign(&c->b,buf,entry_size) == -1) return -1;
+      if (posplus(c,entry_size) == -1) return -1;
     }
   }
 

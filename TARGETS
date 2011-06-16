@@ -1,6 +1,5 @@
 load
 compile
-uint32.h
 cdbget.o
 systype
 makelib
@@ -30,9 +29,9 @@ byte_copy.o
 byte_cr.o
 str_len.o
 fmt_ulong.o
-uint32_unpack.o
+ref_unpack.o
 byte_diff.o
-uint32_pack.o
+ref_pack.o
 scan_ulong.o
 byte.a
 cdbget

@@ -3,7 +3,7 @@
 #include "byte.h"
 #include "error.h"
 
-static int allwrite(int (*op)(),int fd,char *buf,unsigned int len)
+static int allwrite(ssize_t (*op)(),int fd,char *buf,off_t len)
 {
   int w;
 
@@ -30,9 +30,9 @@ int buffer_flush(buffer *s)
   return allwrite(s->op,s->fd,s->x,p);
 }
 
-int buffer_putalign(buffer *s,char *buf,unsigned int len)
+int buffer_putalign(buffer *s,char *buf,off_t len)
 {
-  unsigned int n;
+  off_t n;
  
   while (len > (n = s->n - s->p)) {
     byte_copy(s->x + s->p,n,buf); s->p += n; buf += n; len -= n;
@@ -44,9 +44,9 @@ int buffer_putalign(buffer *s,char *buf,unsigned int len)
   return 0;
 }
 
-int buffer_put(buffer *s,char *buf,unsigned int len)
+int buffer_put(buffer *s,char *buf,off_t len)
 {
-  unsigned int n;
+  off_t n;
  
   n = s->n;
   if (len > n - s->p) {
@@ -66,7 +66,7 @@ int buffer_put(buffer *s,char *buf,unsigned int len)
   return 0;
 }
 
-int buffer_putflush(buffer *s,char *buf,unsigned int len)
+int buffer_putflush(buffer *s,char *buf,off_t len)
 {
   if (buffer_flush(s) == -1) return -1;
   return allwrite(s->op,s->fd,buf,len);

@@ -1,8 +1,9 @@
+#include <sys/types.h>
 #include "byte.h"
 
-int byte_diff(s,n,t)
+off_t byte_diff(s,n,t)
 register char *s;
-register unsigned int n;
+register off_t n;
 register char *t;
 {
   for (;;) {
@@ -11,6 +12,5 @@ register char *t;
     if (!n) return 0; if (*s != *t) break; ++s; ++t; --n;
     if (!n) return 0; if (*s != *t) break; ++s; ++t; --n;
   }
-  return ((int)(unsigned int)(unsigned char) *s)
-       - ((int)(unsigned int)(unsigned char) *t);
+  return ((off_t) *s) - ((off_t) *t);
 }

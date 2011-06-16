@@ -194,15 +194,11 @@ echo $?
 cdbtest < test.cdb
 echo $?
 
-echo '--- testzero can build a database very close to 4GB'
-testzero 65507 > /dev/null
-echo $?
-
-echo '--- testzero complains if hash table passes 4GB'
+echo '--- testzero should not complain if hash table passes 4GB'
 testzero 65508 > /dev/null
 echo $?
 
-echo '--- testzero complains if records pass 4GB'
+echo '--- testzero should not complain if records pass 4GB'
 testzero 66000 > /dev/null
 echo $?
 

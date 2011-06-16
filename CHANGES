@@ -14,3 +14,7 @@
 	internal: added testzero to rts.
 	ui: posplus() sets nomem if it passes 4GB.
 	version: cdb 0.75, beta.
+20110621
+        moved to 64-bit structures
+        uses 64-bit file operations (LFS)
+        cleanups regarding POSIX functions

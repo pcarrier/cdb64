@@ -1,4 +1,5 @@
-#include "uint32.h"
+#include <unistd.h>
+#include "ref.h"
 #include "fmt.h"
 #include "buffer.h"
 #include "strerr.h"
@@ -24,7 +25,7 @@ void putflush(void)
   if (buffer_flush(buffer_1small) == -1) die_write();
 }
 
-uint32 pos = 0;
+ref_t pos = 0;
 
 void get(char *buf,unsigned int len)
 {
@@ -40,11 +41,11 @@ void get(char *buf,unsigned int len)
   }
 }
 
-void getnum(uint32 *num)
+void getnum(ref_t *num)
 {
-  char buf[4];
-  get(buf,4);
-  uint32_unpack(buf,num);
+  char buf[ref_size];
+  get(buf,ref_size);
+  ref_unpack(buf,num);
 }
 
 char strnum[FMT_ULONG];
@@ -68,16 +69,16 @@ static struct cdb c;
 
 main()
 {
-  uint32 eod;
-  uint32 klen;
-  uint32 dlen;
+  ref_t eod;
+  ref_t klen;
+  ref_t dlen;
   seek_pos rest;
   int r;
 
   cdb_init(&c,0);
 
   getnum(&eod);
-  while (pos < 2048) getnum(&dlen);
+  while (pos < 4096) getnum(&dlen);
 
   while (pos < eod) {
     getnum(&klen);

@@ -1,6 +1,9 @@
+#include <sys/types.h>
+#include <stdint.h>
 #include "alloc.h"
 #include "error.h"
-extern char *malloc();
+
+extern void *malloc();
 extern void free();
 
 #define ALIGNMENT 16 /* XXX: assuming that this alignment is enough */
@@ -9,10 +12,10 @@ extern void free();
 typedef union { char irrelevant[ALIGNMENT]; double d; } aligned;
 static aligned realspace[SPACE / ALIGNMENT];
 #define space ((char *) realspace)
-static unsigned int avail = SPACE; /* multiple of ALIGNMENT; 0<=avail<=SPACE */
+static off_t avail = SPACE; /* multiple of ALIGNMENT; 0<=avail<=SPACE */
 
 /*@null@*//*@out@*/char *alloc(n)
-unsigned int n;
+off_t n;
 {
   char *x;
   n = ALIGNMENT + n - (n & (ALIGNMENT - 1)); /* XXX: could overflow */

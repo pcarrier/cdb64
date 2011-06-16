@@ -2,15 +2,15 @@
 
 #include "cdb.h"
 
-uint32 cdb_hashadd(uint32 h,unsigned char c)
+ref_t cdb_hashadd(ref_t h,unsigned char c)
 {
   h += (h << 5);
   return h ^ c;
 }
 
-uint32 cdb_hash(char *buf,unsigned int len)
+ref_t cdb_hash(char *buf,off_t len)
 {
-  uint32 h;
+  ref_t h;
 
   h = CDB_HASHSTART;
   while (len) {
