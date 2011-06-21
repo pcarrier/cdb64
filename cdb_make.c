@@ -1,4 +1,3 @@
-/* Public domain. */
 #include <sys/types.h>
 #include <unistd.h>
 #include "seek.h"

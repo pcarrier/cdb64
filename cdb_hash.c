@@ -1,5 +1,3 @@
-/* Public domain. */
-
 #include "cdb.h"
 
 ref_t cdb_hashadd(ref_t h,unsigned char c)
