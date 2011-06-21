@@ -66,7 +66,7 @@ main()
   ref_t dlen;
 
   getnum(&eod);
-  while (pos < 4096) getnum(&dlen);
+  while (pos < 256*entry_size) getnum(&dlen);
 
   while (pos < eod) {
     getnum(&klen);

@@ -16,7 +16,7 @@ struct cdb_hplist {
 
 struct cdb_make {
   char bspace[8192];
-  char final[4096];
+  char final[256*entry_size];
   ref_t count[256];
   ref_t start[256];
   struct cdb_hplist *head;
