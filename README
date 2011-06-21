@@ -1,7 +1,6 @@
-cdb 0.75, beta.
-20000219
-Copyright 2000
-D. J. Bernstein
+cdb64 0.75, beta.
 
-cdb home page: http://cr.yp.to/cdb.html
-Installation instructions: http://cr.yp.to/cdb/install.html
+cdb64 home page: https://github.com/pcarrier/cdb64
+
+Granting code to the public domain isn't widely
+considered as legal, so yes, I added a license.
