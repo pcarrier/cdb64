@@ -68,7 +68,6 @@ main(int argc,char **argv)
       get(&ch);
       if (ch == ',') break;
       if ((ch < '0') || (ch > '9')) die_readformat();
-      if (klen > 429496720) { errno = error_nomem; die_write(); }
       klen = klen * 10 + (ch - '0');
     }
     dlen = 0;
@@ -76,7 +75,6 @@ main(int argc,char **argv)
       get(&ch);
       if (ch == ':') break;
       if ((ch < '0') || (ch > '9')) die_readformat();
-      if (dlen > 429496720) { errno = error_nomem; die_write(); }
       dlen = dlen * 10 + (ch - '0');
     }
 
